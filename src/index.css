@@ -1,0 +1,373 @@
+@import 'tailwindcss';
+
+/* Mirrors the live site's theme exactly. The md breakpoint is 1025px, not
+   Tailwind's default 768px — every `max-md:` class in the markup depends on
+   that, so it must stay. */
+@theme {
+  --breakpoint-md: 1025px;
+  --container-xl: 36rem;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-beige: var(--beige);
+  --color-light-beige: var(--light-beige);
+  --color-light-brown: var(--light-brown);
+  --color-gold: var(--gold);
+
+  --font-inter: var(--font-inter);
+  --font-khand: var(--font-khand);
+  --font-patrick-hand: var(--font-patrick-hand);
+}
+
+:root {
+  --background: #f8f8f0;
+  --foreground: #463721;
+  --beige: #ffe386;
+  --light-beige: #ece2b1;
+  --light-brown: #684900;
+  --gold: #b9902e;
+
+  --font-inter: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-khand: 'Khand', sans-serif;
+  --font-patrick-hand: 'Patrick Hand', cursive;
+
+  color-scheme: light;
+}
+
+/* The whole layout is built on a viewport-relative root font size, so every
+   rem in the markup scales with the screen. Dropping this is what makes a
+   rebuild "look almost right but off" at every size. */
+html {
+  font-size: 1.04167vw;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: clip;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background-color: var(--beige);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.paddx {
+  padding-inline: 3vw;
+}
+
+/* The site's type scale, named by their design's px sizes. */
+.text180 {
+  letter-spacing: -5%;
+  font-size: 9rem;
+  line-height: 85%;
+  font-family: var(--font-khand);
+  font-weight: 600;
+}
+
+.text150 {
+  letter-spacing: -5%;
+  font-size: 8vw;
+  line-height: 85%;
+  font-family: var(--font-khand);
+  font-weight: 600;
+}
+
+.text52 {
+  letter-spacing: -4%;
+  font-size: 2.2rem;
+  line-height: 90%;
+}
+
+.text36 {
+  letter-spacing: -4%;
+  font-size: 1.45rem;
+  line-height: 120%;
+}
+
+.text32 {
+  letter-spacing: -4%;
+  font-size: 1.3rem;
+  line-height: 130%;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 3.90625vw;
+  }
+
+  .paddx {
+    padding-inline: 5vw;
+  }
+
+  .text180 {
+    font-size: 4.5rem;
+  }
+
+  .text150 {
+    font-size: 3.5rem;
+  }
+
+  .text52 {
+    font-size: 1.75rem;
+  }
+
+  .text36 {
+    font-size: 1.15rem;
+  }
+
+  .text32 {
+    font-size: 1.05rem;
+  }
+
+  [data-menu-link] {
+    font-size: min(19vw, 11vh) !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1025px) {
+  html {
+    font-size: 2.86458vw;
+  }
+
+  .paddx {
+    padding-inline: 5vw;
+  }
+
+  .text180 {
+    font-size: 4.5rem;
+  }
+
+  .text150 {
+    font-size: 3.5rem;
+  }
+
+  .text52 {
+    font-size: 1.75rem;
+  }
+
+  .text36 {
+    font-size: 1.15rem;
+  }
+
+  .text32 {
+    font-size: 1.05rem;
+  }
+
+  [data-menu-link] {
+    font-size: min(19vw, 11vh) !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+
+/* ===== Footer slash intro banner =====
+   Shown once when the footer scrolls into view, then fades itself out. The
+   headline is two clipped halves that slide apart along the slash line. */
+.slash-banner {
+  animation: 0.45s ease-in 1.95s forwards slash-fade-out;
+}
+
+.slash-scrim {
+  position: absolute;
+  inset: 0;
+  background: #463721e6;
+  -webkit-backdrop-filter: blur(30px) saturate(0.85);
+  backdrop-filter: blur(30px) saturate(0.85);
+  animation: 0.45s ease-out backwards slash-scrim-in;
+}
+
+.slash-line {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 1px;
+  transform: rotate(-7deg) scaleX(0);
+  transform-origin: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--beige) 22%,
+    #fff 50%,
+    var(--beige) 78%,
+    transparent
+  );
+  animation: 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards slash-line;
+}
+
+.slash-stack {
+  animation: 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.26s backwards slash-stack-in;
+}
+
+.slash-word {
+  display: block;
+  color: var(--beige);
+  font-size: 6.2vw;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.slash-word--top {
+  clip-path: polygon(0 0, 100% 0, 100% 40%, 0 60%);
+  animation: 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.34s backwards slash-half-top;
+}
+
+.slash-word--bottom {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 60%, 100% 40%, 100% 100%, 0 100%);
+  animation: 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.34s backwards slash-half-bottom;
+}
+
+.slash-sub {
+  display: block;
+  margin-top: 1.4vw;
+  color: var(--background);
+  opacity: 0.75;
+  font-size: 1.05vw;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  text-transform: uppercase;
+  animation: 0.5s ease-out 0.62s backwards slash-sub-in;
+}
+
+@keyframes slash-scrim-in {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slash-line {
+  0% {
+    opacity: 0;
+    transform: rotate(-7deg) scaleX(0);
+  }
+  15% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 1;
+    transform: rotate(-7deg) scaleX(1);
+  }
+  to {
+    opacity: 0;
+    transform: rotate(-7deg) scaleX(1);
+  }
+}
+
+@keyframes slash-stack-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slash-half-top {
+  0% {
+    transform: translate(0);
+  }
+  30% {
+    transform: translate(0.35vw, -0.55vw);
+  }
+  to {
+    transform: translate(0);
+  }
+}
+
+@keyframes slash-half-bottom {
+  0% {
+    transform: translate(0);
+  }
+  30% {
+    transform: translate(-0.35vw, 0.55vw);
+  }
+  to {
+    transform: translate(0);
+  }
+}
+
+@keyframes slash-sub-in {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.75;
+  }
+}
+
+@keyframes slash-fade-out {
+  0% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .slash-word {
+    font-size: 10.5vw;
+  }
+
+  .slash-sub {
+    margin-top: 4vw;
+    font-size: 2.9vw;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slash-banner,
+  .slash-scrim,
+  .slash-line,
+  .slash-stack,
+  .slash-word,
+  .slash-sub {
+    animation: none;
+  }
+}
